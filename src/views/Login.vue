@@ -18,7 +18,7 @@
 </template>
 <script>
 // 引入api的login文件
-import {login} from '@/api/index.js'
+import { login } from '@/api/index.js'
 export default {
   data () {
     return {
@@ -45,10 +45,19 @@ export default {
         if (valid) {
           login(this.loginForm).then((res) => {
             if (res.meta.status === 200) {
-              this.$message.success(res.meta.msg)
-              this.$router.push('/Home')
+              this.$message.success({
+                message: res.meta.msg,
+                duration: 1500
+              })
+              // 存起来token
+              localStorage.setItem('mytoken', res.data.token)
+              // 到home页面
+              this.$router.push('users')
             } else {
-              this.$message.error(res.meta.msg)
+              this.$message.error({
+                message: res.meta.msg,
+                duration: 1000
+              })
             }
           })
         } else {
