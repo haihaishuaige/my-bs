@@ -76,7 +76,9 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background:linear-gradient(to right top,rgb(174, 27, 204),#782bc0,rgb(31, 194, 194));
+  // background:linear-gradient(to right top,rgb(174, 27, 204),#782bc0,rgb(31, 194, 194));
+  background:url(../assets/loginbj.jpg) center center;
+  // background-size: contain;
   .container {
     position: absolute;
     left: 0;

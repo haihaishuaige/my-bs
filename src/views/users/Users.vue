@@ -9,7 +9,7 @@
         <!-- 搜索框 -->
         <div style="margin-top: 15px;">
             <el-input placeholder="请输入内容" v-model="addData" class="input-with-select">
-                <el-button slot="append" icon="el-icon-search"></el-button>
+                <el-button slot="append" icon="el-icon-search" @click="filterTab"></el-button>
             </el-input>
             <el-button type="success" plain>添加用户</el-button>
         </div>
@@ -53,7 +53,7 @@
       :page-sizes="[1,2,3,4]"
       :page-size="100"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="4">
+      :total="pagetotal">
     </el-pagination>
   </div>
     </div>
@@ -68,7 +68,8 @@ export default {
       tableData: [ ],
       currentPage4: 1,
       pagenum: 1,
-      pagetotal: 0
+      pagetotal: 0,
+      pagesize: 1
     }
   },
   // -----
@@ -76,8 +77,8 @@ export default {
     // 分页函数
     handleSizeChange (val) {
       // console.log(`每页 ${val} 条`)
-      getAllUserData({query: '', pagenum: this.pagenum, pagesize: `${val}`}).then(res => {
-        console.log(res)
+      this.pagesize = `${val}`
+      getAllUserData({query: '', pagenum: this.pagenum, pagesize: this.pagesize}).then(res => {
         if (res.meta.status === 200) {
           this.tableData = res.data.users
         }
@@ -86,22 +87,52 @@ export default {
     handleCurrentChange (val) {
       // console.log(`当前页: ${val}`)
       this.pagenum = `${val}`
-      getAllUserData({query: '', pagenum: this.pagenum, pagesize: 1}).then(res => {
+      getAllUserData({query: '', pagenum: this.pagenum, pagesize: this.pagesize}).then(res => {
         if (res.meta.status === 200) {
           this.tableData = res.data.users
         }
       })
+    },
+    // 过滤搜索内容
+    filterTab () {
+      // if (this.addData === '') {
+      //   getAllUserData({query: '', pagenum: this.pagenum, pagesize: this.pagesize}).then(res => {
+      //     console.log(res)
+      //     if (res.meta.status === 200) {
+      //       this.pagetotal = res.data.total
+      //       this.tableData = res.data.users
+      //     }
+      //   })
+      // } else {
+      this.tableData = this.tableData.filter(v => {
+        return v.username.indexOf(this.addData) !== -1
+      })
+      this.pagetotal = this.tableData.length
+      // }
     }
   },
   mounted () {
     // 页面加载完成，获取数据
-    getAllUserData({query: '', pagenum: 1, pagesize: 1}).then(res => {
+    getAllUserData({query: '', pagenum: this.pagenum, pagesize: this.pagesize}).then(res => {
       console.log(res)
       if (res.meta.status === 200) {
         this.pagetotal = res.data.total
         this.tableData = res.data.users
       }
     })
+  },
+  watch: {
+    // 监听到输入框没有值之后，就返回原来的数据
+    addData () {
+      if (this.addData === '') {
+        getAllUserData({query: '', pagenum: this.pagenum, pagesize: this.pagesize}).then(res => {
+          if (res.meta.status === 200) {
+            this.pagetotal = res.data.total
+            this.tableData = res.data.users
+          }
+        })
+      }
+    }
   }
 }
 </script>
