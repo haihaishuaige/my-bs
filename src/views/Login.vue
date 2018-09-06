@@ -23,7 +23,7 @@ export default {
   data () {
     return {
       loginForm: {
-        username: 'admin',
+        username: 'haihai',
         password: '123456'
       },
       rules: {
@@ -52,7 +52,7 @@ export default {
               // 存起来token
               localStorage.setItem('mytoken', res.data.token)
               // 到home页面
-              this.$router.push('users')
+              this.$router.push('/')
             } else {
               this.$message.error({
                 message: res.meta.msg,

@@ -5,7 +5,7 @@
         <div class="logoBox">
           <img class="logo" src="../assets/logo.png" alt="">
         </div>
-        <el-menu default-active="users" class="el-menu-admin" @open="handleOpen" @close="handleClose" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" :unique-opened='true' :collapse='iscollapse' :router='true'>
+        <el-menu style="background:#333" default-active="users" class="el-menu-admin" @open="handleOpen" @close="handleClose" background-color="#333"  text-color="#ff9400" active-text-color="#0094ff" :unique-opened='true' :collapse='iscollapse' :router='true'>
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -72,6 +72,8 @@ export default {
 <style lang="scss" scoped>
 .home {
   height: 100%;
+  background:url('../assets/1loginbj.jpg');
+  background-size: cover;
   .el-menu-admin:not(.el-menu--collapse) {
     width: 200px;
     min-height: 400px;
@@ -81,13 +83,14 @@ export default {
   }
   .el-aside {
     overflow: hidden;
-    background-color: #545c64;
+    background:#333;
   }
   .el-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #545c64;
+    // background-color: #545c64;
+     background:#333;
   }
   .logoBox{
     max-width:70px;

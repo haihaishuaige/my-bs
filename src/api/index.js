@@ -26,3 +26,39 @@ export const getAllUserData = (params) => {
     return res.data
   })
 }
+// 添加用户
+export const addUsers = (params) => {
+  return axios.post('users', params).then(res => {
+    return res.data
+  })
+}
+// 编辑用户
+export const editUsers = (params) => {
+  return axios.put(`users/${params.id}`, params).then(res => {
+    return res.data
+  })
+}
+// 删除用户
+export const delUsers = (id) => {
+  return axios.delete(`users/${id}`).then(res => {
+    return res.data
+  })
+}
+// 修改用户状态
+export const statUsers = (params) => {
+  return axios.put(`users/${params.id}/state/${params.mg_state}`).then(res => {
+    return res.data
+  })
+}
+// 获取角色列表数据
+export const getGuanLiUserData = () => {
+  return axios.get('roles').then((res) => {
+    return res.data
+  })
+}
+// 授权角色管理
+export const UsersJueSe = (params) => {
+  return axios.put(`users/${params.id}/role`, params).then(res => {
+    return res.data
+  })
+}
