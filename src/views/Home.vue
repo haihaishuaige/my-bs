@@ -5,7 +5,7 @@
         <div class="logoBox">
           <img class="logo" src="../assets/logo.png" alt="">
         </div>
-        <el-menu style="background:#333" default-active="users" class="el-menu-admin" @open="handleOpen" @close="handleClose" background-color="#333"  text-color="#ff9400" active-text-color="#0094ff" :unique-opened='true' :collapse='iscollapse' :router='true'>
+        <el-menu style="background:#333" default-active="webCome" class="el-menu-admin" @open="handleOpen" @close="handleClose" background-color="#333"  text-color="#ff9400" active-text-color="#0094ff" :unique-opened='true' :collapse='iscollapse' :router='true'>
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -18,7 +18,8 @@
               <i class="el-icon-location"></i>
               <span>权限管理</span>
             </template>
-            <el-menu-item class="el-icon-menu" index="2-1">选项2</el-menu-item>
+            <el-menu-item class="el-icon-menu" index="Role">角色列表</el-menu-item>
+            <el-menu-item class="el-icon-menu" index="Right">权限列表</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -27,7 +28,7 @@
           <span class="myicon myicon-menu toggle-btn" @click='iscollapse = !iscollapse'></span>
           <h2 class="system-title">后台管理系统</h2>
           <div class="hello_users welcome">
-            <span>你好:admin</span>
+            <span>你好:{{helloUsers}}</span>
             <el-button size="mini" round @click="loginOut">退出</el-button>
           </div>
         </el-header>
@@ -44,7 +45,8 @@
 export default {
   data () {
     return {
-      iscollapse: false
+      iscollapse: false,
+      helloUsers: ''
     }
   },
   methods: {
@@ -65,6 +67,8 @@ export default {
     // getAllUserData({query: '', pagenum: 1, pagesize: 10}).then((res) => {
     //   console.log(res)
     // })
+    var myData = JSON.parse(localStorage.getItem('mytoken'))
+    this.helloUsers = myData.username
   }
 }
 </script>

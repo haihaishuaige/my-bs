@@ -101,7 +101,7 @@
           <el-input v-model="guanLiForm.username" auto-complete="off" disabled="disabled" style="width:150px"></el-input>
         </el-form-item>
         <el-form-item label="角色:" label-width="100px">
-            <el-select v-model="guanLiValue" placeholder="请选择" @change="UsersJueSeSelect">
+            <el-select v-model="guanLiForm.rid" placeholder="请选择">
               <el-option v-for="item in guanLiOption" :key="item.id" :label="item.roleName" :value="item.id">
               </el-option>
             </el-select>
@@ -151,7 +151,7 @@ export default {
       },
       // 授权管理下拉框
       guanLiOption: [ ],
-      guanLiValue: '',
+      // guanLiValue: '',
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' }
@@ -324,9 +324,8 @@ export default {
           this.guanLiOption = res.data
         }
       })
-      // console.log(row)
-      // console.log(row)
-      this.guanLiValue = row.role_name
+      // 页面一开始就赋值显示当前的角色
+      this.guanLiForm.rid = row.role_name
     },
     // 状态
     switchStat (row) {
@@ -346,11 +345,6 @@ export default {
           })
         }
       })
-    },
-    // 角色列表下拉框获取cid
-    UsersJueSeSelect () {
-      // console.log(this.guanLiValue)
-      this.guanLiForm.rid = this.guanLiValue
     },
     // 点击提交角色授权
     guanLiUsersForm (row) {

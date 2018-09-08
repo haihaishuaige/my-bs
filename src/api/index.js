@@ -10,10 +10,10 @@ export const login = (params) => {
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
   // 在发送请求之前做些什么
-  var mytoken = localStorage.getItem('mytoken')
+  var mytoken = JSON.parse(localStorage.getItem('mytoken'))
   if (mytoken) {
     // 将请求头加上token
-    config.headers['Authorization'] = mytoken
+    config.headers['Authorization'] = mytoken.token
   }
   return config
 }, function (error) {
@@ -59,6 +59,30 @@ export const getGuanLiUserData = () => {
 // 授权角色管理
 export const UsersJueSe = (params) => {
   return axios.put(`users/${params.id}/role`, params).then(res => {
+    return res.data
+  })
+}
+// 获取角色列表数据
+export const getRightData = (params) => {
+  return axios.get(`rights/${params}`).then((res) => {
+    return res.data
+  })
+}
+// 获取角色权限数据
+export const getRoleData = () => {
+  return axios.get('roles').then(res => {
+    return res.data
+  })
+}
+// 删除角色权限
+export const delRoleData = (roleId, rightId) => {
+  return axios.delete(`roles/${roleId}/rights/${rightId}`).then(res => {
+    return res.data
+  })
+}
+// 修改用户权限
+export const editRoleData = (roleId, rids) => {
+  return axios.post(`roles/${roleId}/rights`, {rids: rids}).then(res => {
     return res.data
   })
 }

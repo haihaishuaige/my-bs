@@ -50,7 +50,7 @@ export default {
                 duration: 1500
               })
               // 存起来token
-              localStorage.setItem('mytoken', res.data.token)
+              localStorage.setItem('mytoken', JSON.stringify(res.data))
               // 到home页面
               this.$router.push('/')
             } else {
