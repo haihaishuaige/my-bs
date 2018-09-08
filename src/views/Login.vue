@@ -52,7 +52,7 @@ export default {
               // 存起来token
               localStorage.setItem('mytoken', JSON.stringify(res.data))
               // 到home页面
-              this.$router.push('/')
+              this.$router.push('/webcome')
             } else {
               this.$message.error({
                 message: res.meta.msg,

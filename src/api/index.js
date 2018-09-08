@@ -86,3 +86,21 @@ export const editRoleData = (roleId, rids) => {
     return res.data
   })
 }
+// 修改用户权限
+export const addRoleData = (params) => {
+  return axios.post('roles', params).then(res => {
+    return res.data
+  })
+}
+// 删除角色
+export const delRoleJueSeData = (id) => {
+  return axios.delete(`roles/${id}`).then(res => {
+    return res.data
+  })
+}
+// 修改角色
+export const editRoleJueSe = (params) => {
+  return axios.put(`roles/${params.id}`, params).then(res => {
+    return res.data
+  })
+}

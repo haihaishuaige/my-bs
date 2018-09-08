@@ -5,6 +5,7 @@ import Home from '../views/Home.vue'
 import Users from '../views/users/Users.vue'
 import Right from '../views/right/Right.vue'
 import Role from '../views/right/Role.vue'
+import Webcome from '../views/webcome/Webcome.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -26,7 +27,8 @@ export default new Router({
       children: [
         {name: 'users', path: 'users', component: Users},
         {name: 'Right', path: 'right', component: Right},
-        {name: 'Role', path: 'role', component: Role}
+        {name: 'Role', path: 'role', component: Role},
+        {name: 'Webcome', path: 'webcome', component: Webcome}
       ]
     }
   ]

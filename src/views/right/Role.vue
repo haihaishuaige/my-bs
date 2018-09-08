@@ -2,7 +2,7 @@
   <div class="role">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" style="background:#fff;">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/webcome' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>用户管理</el-breadcrumb-item>
       <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
@@ -59,10 +59,10 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
-              <el-button type="primary" plain icon="el-icon-edit"></el-button>
+              <el-button type="primary" plain icon="el-icon-edit" @click="editRoleBtn(scope.row)"></el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="删除用户" placement="bottom-end">
-              <el-button type="primary" plain icon="el-icon-delete"></el-button>
+              <el-button type="primary" plain icon="el-icon-delete" @click="delRoleJueSeData(scope.row)"></el-button>
               <el-button>右边</el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="授权管理" placement="right">
@@ -88,17 +88,32 @@
     </el-dialog>
     <!-- 添加角色弹出框 -->
     <el-dialog title="添加角色" :visible.sync="addRoleDialogFormVisible">
-      <el-form :model="AddRoleForm" :rules="rules">
+      <el-form :model="AddRoleForm" :rules="rules" ref="AddRoleForm" >
         <el-form-item label="角色名称" label-width="150px" prop="roleName">
           <el-input v-model="AddRoleForm.roleName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="角色名称" label-width="150px" prop="roleDesc">
+        <el-form-item label="角色描述" label-width="150px">
           <el-input v-model="AddRoleForm.roleDesc" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addRoleDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addRoleDialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addRoleData('AddRoleForm')">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 修改角色弹出框 -->
+    <el-dialog title="编辑修改角色" :visible.sync="editRoleDialogFormVisible">
+      <el-form :model="editRoleForm" :rules="rules" ref="editRoleForm" >
+        <el-form-item label="角色名称" label-width="150px" prop="roleName">
+          <el-input v-model="editRoleForm.roleName" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="角色描述" label-width="150px">
+          <el-input v-model="editRoleForm.roleDesc" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editRoleDialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editRoleData('editRoleForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -109,7 +124,10 @@ import {
   getRoleData,
   delRoleData,
   getRightData,
-  editRoleData
+  editRoleData,
+  addRoleData,
+  delRoleJueSeData,
+  editRoleJueSe
 } from '@/api/index.js'
 export default {
   data () {
@@ -129,14 +147,19 @@ export default {
       // 添加角色
       addRoleDialogFormVisible: false,
       AddRoleForm: {
-        roleName: ''
+        roleName: '',
+        roleDesc: ''
+      },
+      // 修改角色
+      editRoleDialogFormVisible: false,
+      editRoleForm: {
+        roleName: '',
+        roleDesc: '',
+        id: ''
       },
       rules: {
         roleName: [
           { required: true, message: '请输入角色名称', trigger: 'blur' }
-        ],
-        roleDesc: [
-          { required: true, message: '请对角色进行描述', trigger: 'blur' }
         ]
       }
     }
@@ -220,6 +243,98 @@ export default {
             message: res.meta.msg,
             duration: 1000
           })
+        }
+      })
+    },
+    // 添加角色
+    addRoleData (AddRoleForm) {
+      this.$refs[AddRoleForm].validate((valid) => {
+        if (valid) {
+          addRoleData(this.AddRoleForm).then(res => {
+            if (res.meta.status === 201) {
+              this.$message({
+                type: 'success',
+                message: res.meta.msg,
+                duration: 1000
+              })
+              this.addRoleDialogFormVisible = false
+              this.getAllRoleData()
+            } else {
+              this.$message({
+                type: 'error',
+                message: res.meta.msg,
+                duration: 1000
+              })
+            }
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    // 删除角色
+    delRoleJueSeData (row) {
+      console.log(row)
+      this.$confirm(`此操作将永久删除"${row.roleName}", 是否继续?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delRoleJueSeData(row.id).then(res => {
+          if (res.meta.status === 200) {
+            this.$message({
+              type: 'success',
+              message: res.meta.msg,
+              duration: 1000
+            })
+            this.getAllRoleData()
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.meta.msg,
+              duration: 1000
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    // 弹出修改角色框
+    editRoleBtn (row) {
+      this.editRoleDialogFormVisible = true
+      this.editRoleForm.roleDesc = row.roleDesc
+      this.editRoleForm.roleName = row.roleName
+      this.editRoleForm.id = row.id
+    },
+    // 修改角色
+    editRoleData (editRoleForm) {
+      this.$refs[editRoleForm].validate((valid) => {
+        if (valid) {
+          editRoleJueSe(this.editRoleForm).then(res => {
+            if (res.meta.status === 200) {
+              this.$message({
+                type: 'success',
+                message: res.meta.msg,
+                duration: 1000
+              })
+              this.editRoleDialogFormVisible = false
+              this.getAllRoleData()
+            } else {
+              this.$message({
+                type: 'error',
+                message: res.meta.msg,
+                duration: 1000
+              })
+            }
+          })
+        } else {
+          console.log('error submit!!')
+          return false
         }
       })
     }
