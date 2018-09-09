@@ -19,6 +19,7 @@
 <script>
 // 引入api的login文件
 import { login } from '@/api/index.js'
+// import store from '@/store/Store.js'
 export default {
   data () {
     return {
@@ -49,6 +50,8 @@ export default {
                 message: res.meta.msg,
                 duration: 1500
               })
+              // 使用store的方法
+              this.$store.dispatch('setUserNameAction', res.data.username + '帅哥')
               // 存起来token
               localStorage.setItem('mytoken', JSON.stringify(res.data))
               // 到home页面

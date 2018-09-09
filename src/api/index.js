@@ -104,3 +104,15 @@ export const editRoleJueSe = (params) => {
     return res.data
   })
 }
+// 获取左边菜单列表数据
+export const getMenusData = (params) => {
+  return axios.get('menus').then((res) => {
+    return res.data
+  })
+}
+// 获取categories列表数据
+export const getCategoriesData = (params) => {
+  return axios.get('categories', {params: {'type': params}}).then((res) => {
+    return res.data
+  })
+}

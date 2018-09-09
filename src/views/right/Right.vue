@@ -59,6 +59,11 @@ export default {
     getRightData('list').then(res => {
       if (res.meta.status === 200) {
         this.RightData = res.data
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.meta.msg
+        })
       }
     })
   },

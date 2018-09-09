@@ -8,11 +8,11 @@
     </el-breadcrumb>
     <!-- 添加角色 -->
     <div>
-      <el-button type="success" plain @click="addRoleDialogFormVisible=true">添加角色</el-button>
+      <el-button type="info" plain round @click="addRoleDialogFormVisible=true">添加角色</el-button>
     </div>
     <!-- 表格-->
     <template>
-      <el-table :data="RoleData" border style="width: 100%;margin-top:15px">
+      <el-table :data="RoleData" border style="width: 100%;border-radius:15px 15px 0 0 ;margin-top:5px;">
         <!-- 展开箭头 -->
         <el-table-column type="expand">
           <template slot-scope="scope">
@@ -92,7 +92,7 @@
         <el-form-item label="角色名称" label-width="150px" prop="roleName">
           <el-input v-model="AddRoleForm.roleName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="角色描述" label-width="150px">
+        <el-form-item label="角色描述" label-width="150px" prop="roleDesc">
           <el-input v-model="AddRoleForm.roleDesc" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -160,6 +160,9 @@ export default {
       rules: {
         roleName: [
           { required: true, message: '请输入角色名称', trigger: 'blur' }
+        ],
+        roleDesc: [
+          { required: false, message: '请输入角色名称', trigger: 'blur' }
         ]
       }
     }
@@ -170,7 +173,14 @@ export default {
   methods: {
     getAllRoleData () {
       getRoleData().then(res => {
-        this.RoleData = res.data
+        if (res.meta.status === 200) {
+          this.RoleData = res.data
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.meta.msg
+          })
+        }
       })
     },
     // 删除角色权限
@@ -258,6 +268,7 @@ export default {
                 duration: 1000
               })
               this.addRoleDialogFormVisible = false
+              this.$refs[AddRoleForm].resetFields()
               this.getAllRoleData()
             } else {
               this.$message({

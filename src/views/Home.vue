@@ -6,20 +6,12 @@
           <img class="logo" src="../assets/logo.png" alt="">
         </div>
         <el-menu style="background:#333" default-active="webCome" class="el-menu-admin" @open="handleOpen" @close="handleClose" background-color="#333"  text-color="#ff9400" active-text-color="#0094ff" :unique-opened='true' :collapse='iscollapse' :router='true'>
-          <el-submenu index="1">
+          <el-submenu :index="item.id+''" v-for="item in menusData" :key="item.id">
             <template slot="title">
               <i class="el-icon-location"></i>
-              <span>用户管理</span>
+              <span>{{item.authName}}</span>
             </template>
-            <el-menu-item class="el-icon-menu" index="users">用户列表</el-menu-item>
-          </el-submenu>
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>权限管理</span>
-            </template>
-            <el-menu-item class="el-icon-menu" index="Role">角色列表</el-menu-item>
-            <el-menu-item class="el-icon-menu" index="Right">权限列表</el-menu-item>
+            <el-menu-item class="el-icon-menu" :index="twoItem.path" v-for="twoItem in item.children" :key="twoItem.id">{{twoItem.authName}}</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -28,7 +20,7 @@
           <span class="myicon myicon-menu toggle-btn" @click='iscollapse = !iscollapse'></span>
           <h2 class="system-title">后台管理系统</h2>
           <div class="hello_users welcome">
-            <span>你好:{{helloUsers}}</span>
+            <span>你好:{{helloUsers}}</span>   <!-- {{helloUsers}} -->
             <el-button size="mini" round @click="loginOut">退出</el-button>
           </div>
         </el-header>
@@ -41,12 +33,13 @@
 </template>
 
 <script>
-// import { getAllUserData } from '../api/'
+import { getMenusData } from '../api/index.js'
 export default {
   data () {
     return {
       iscollapse: false,
-      helloUsers: ''
+      helloUsers: '',
+      menusData: []
     }
   },
   methods: {
@@ -64,11 +57,15 @@ export default {
     }
   },
   mounted () {
-    // getAllUserData({query: '', pagenum: 1, pagesize: 10}).then((res) => {
-    //   console.log(res)
-    // })
+    // 获取用户登录的数据 动态设置用户名
     var myData = JSON.parse(localStorage.getItem('mytoken'))
     this.helloUsers = myData.username
+    // 获取左侧菜单数据
+    getMenusData().then(res => {
+      if (res.meta.status === 200) {
+        this.menusData = res.data
+      }
+    })
   }
 }
 </script>
